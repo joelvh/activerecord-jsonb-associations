@@ -11,15 +11,17 @@ module ActiveRecord
           foreign_key = join_keys.foreign_key
           table = reflection.aliased_table
           value = transform_value(owner[foreign_key])
+          association = reflection&.instance_variable_get(:@association)
+          options = association&.options
 
-          if reflection.options.key?(:foreign_store)
+          if options && options.key?(:foreign_store)
             apply_jsonb_scope(
               scope,
               jsonb_equality(table, reflection.options[:foreign_store], key),
               key, value
             )
-          elsif reflection && reflection.options.key?(:store)
-            return super if reflection.belongs_to?
+          elsif options && options.key?(:store)
+            return super if association.is_a?(ActiveRecord::Associations::BelongsToAssociation)
             pluralized_key = key.pluralize
 
             apply_jsonb_scope(
