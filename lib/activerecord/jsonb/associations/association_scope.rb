@@ -3,10 +3,11 @@ module ActiveRecord
     module Associations
       module AssociationScope #:nodoc:
         # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-        def last_chain_scope(scope, table, owner_reflection, owner)
+        def last_chain_scope(scope, owner_reflection, owner)
           reflection = owner_reflection.instance_variable_get(:@reflection)
           return super unless reflection
 
+          table = owner_reflection.aliased_table
           join_keys = reflection.join_keys
           key = join_keys.key
           value = transform_value(owner[join_keys.foreign_key])
