@@ -9,6 +9,7 @@ require 'activerecord/jsonb/associations/belongs_to_association'
 require 'activerecord/jsonb/associations/association'
 require 'activerecord/jsonb/associations/has_many_association'
 require 'activerecord/jsonb/associations/association_scope'
+require 'activerecord/jsonb/associations/foreign_association'
 require 'activerecord/jsonb/associations/preloader/association'
 require 'activerecord/jsonb/associations/preloader/has_many'
 require 'activerecord/jsonb/associations/join_dependency/join_association'
@@ -44,6 +45,10 @@ ActiveSupport.on_load :active_record do
     ActiveRecord::JSONB::Associations::Association
   )
 
+  ::ActiveRecord::Associations::ForeignAssociation.prepend(
+    ActiveRecord::JSONB::Associations::ForeignAssociation
+  )
+
   ::ActiveRecord::Associations::BelongsToAssociation.prepend(
     ActiveRecord::JSONB::Associations::BelongsToAssociation
   )
@@ -60,9 +65,9 @@ ActiveSupport.on_load :active_record do
     ActiveRecord::JSONB::Associations::Preloader::Association
   )
 
-  ::ActiveRecord::Associations::Preloader::HasMany.prepend(
-    ActiveRecord::JSONB::Associations::Preloader::HasMany
-  )
+  # ::ActiveRecord::Associations::Preloader::HasMany.prepend(
+  #   ActiveRecord::JSONB::Associations::Preloader::HasMany
+  # )
 
   ::ActiveRecord::Associations::JoinDependency::JoinAssociation.prepend(
     ActiveRecord::JSONB::Associations::JoinDependency::JoinAssociation
