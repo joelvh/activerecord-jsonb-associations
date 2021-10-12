@@ -3,22 +3,25 @@ module ActiveRecord
     module Associations
       module AssociationScope #:nodoc:
         # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-        def last_chain_scope(scope, table, owner_reflection, owner)
-          reflection = owner_reflection.instance_variable_get(:@reflection)
+        def last_chain_scope(scope, reflection, owner)
           return super unless reflection
 
           join_keys = reflection.join_keys
           key = join_keys.key
-          value = transform_value(owner[join_keys.foreign_key])
+          foreign_key = join_keys.foreign_key
+          table = reflection.aliased_table
+          value = transform_value(owner[foreign_key])
+          association = reflection&.instance_variable_get(:@association)
+          options = association&.options
 
-          if reflection.options.key?(:foreign_store)
+          if options && options.key?(:foreign_store)
             apply_jsonb_scope(
               scope,
               jsonb_equality(table, reflection.options[:foreign_store], key),
               key, value
             )
-          elsif reflection && reflection.options.key?(:store)
-            return super if reflection.belongs_to?
+          elsif options && options.key?(:store)
+            return super if association.is_a?(ActiveRecord::Associations::BelongsToAssociation)
             pluralized_key = key.pluralize
 
             apply_jsonb_scope(
