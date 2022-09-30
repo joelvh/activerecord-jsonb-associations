@@ -20,9 +20,9 @@ Gem::Specification.new do |spec|
     '{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md'
   ]
 
-  spec.required_ruby_version = '~> 2.0'
+  spec.required_ruby_version = '>= 2.0'
 
   spec.add_dependency 'activerecord'
 
-  spec.add_development_dependency 'rspec', '~> 3.7.0'
+  spec.add_development_dependency 'rspec'
 end
